@@ -1,0 +1,55 @@
+<div class="form-card">
+    <div class="form-header">
+        <a href="/contacts" class="btn-icon">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <h1 class="page-title">Add New Contact</h1>
+    </div>
+
+    <% if (error) { %>
+        <div class="alert alert-error">
+            <i class="fas fa-exclamation-circle"></i>
+            <span><%= error %></span>
+        </div>
+    <% } %>
+
+    <div class="card" style="padding: 2rem;">
+        <form action="/contacts" method="POST" class="space-y-6">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" name="name" value="<%= data.name || '' %>" required class="form-input" placeholder="John Doe">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Phone Number</label>
+                    <input type="tel" name="phone" value="<%= data.phone || '' %>" required class="form-input" placeholder="+1 (555) 000-0000">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input type="email" name="email" value="<%= data.email || '' %>" required class="form-input" placeholder="john@example.com">
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary w-full" style="padding: 1rem; font-size: 1rem;">
+                    Establish Connection
+                </button>
+            </div>
+        </form>
+    </div>
+    
+    <div class="card mt-4" style="background-color: var(--primary-light); border-color: #bfdbfe;">
+        <div class="flex gap-4">
+            <div style="color: var(--primary); font-size: 1.5rem;">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <div>
+                <h4 style="font-weight: 700; color: #1e3a8a; font-size: 0.875rem;">Privacy Notified</h4>
+                <p style="font-size: 0.75rem; color: #1e40af; margin-top: 0.25rem;">
+                    Personal data is stored locally in ISO standard format. This ensures auditable records and history management.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

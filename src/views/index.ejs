@@ -1,0 +1,152 @@
+<div class="page-title-section">
+    <div>
+        <h1 class="page-title">Dashboard Overview</h1>
+        <p class="page-subtitle">Your contact management analytics and recent activities.</p>
+    </div>
+    <div class="flex gap-4">
+        <a href="/contacts/new" class="btn btn-primary">
+            <i class="fas fa-plus"></i> New Contact
+        </a>
+    </div>
+</div>
+
+<!-- Hero Section -->
+<div class="hero">
+    <div class="hero-content">
+        <h1 class="hero-title">Smart Contact Manager</h1>
+        <p class="hero-subtitle">
+            Streamline your connections with our production-grade management system. Secure, fast, and organized CSV-backed storage.
+        </p>
+        <div class="flex gap-4">
+            <a href="/contacts" class="btn" style="background: white; color: var(--primary);">
+                View Registry
+            </a>
+        </div>
+    </div>
+    <!-- Decorative shapes -->
+    <div class="hero-shape-1"></div>
+    <div class="hero-shape-2"></div>
+</div>
+
+<!-- Dashboard Grid (Stats) -->
+<div class="dashboard-grid">
+    <!-- Total Contacts -->
+    <div class="card stat-card">
+        <div class="stat-icon blue">
+            <i class="fas fa-users"></i>
+        </div>
+        <div class="stat-title">Total Contacts</div>
+        <div class="stat-value"><%= count %></div>
+        <div class="stat-desc green">
+            <i class="fas fa-arrow-up"></i> Active Database
+        </div>
+    </div>
+    
+    <!-- Recently Added -->
+    <div class="card stat-card">
+        <div class="stat-icon cyan">
+            <i class="fas fa-user-plus"></i>
+        </div>
+        <div class="stat-title">Recently Added</div>
+        <div class="stat-value"><%= recentContacts.length %></div>
+        <div class="stat-desc">Latest acquisitions</div>
+    </div>
+
+    <!-- Timestamp Visualization -->
+    <div class="card stat-card">
+        <div class="stat-icon teal">
+            <i class="fas fa-clock"></i>
+        </div>
+        <div class="stat-title">Last Update</div>
+        <div class="stat-value" style="font-size: 1.5rem;">
+            <%= recentContacts.length > 0 ? new Date(recentContacts[0].createdAt).toLocaleDateString() : 'N/A' %>
+        </div>
+        <div class="stat-desc green">Live Auditing</div>
+    </div>
+
+    <!-- Search Analytics -->
+    <div class="card stat-card">
+        <div class="stat-icon purple">
+            <i class="fas fa-chart-line"></i>
+        </div>
+        <div class="stat-title">Search Volume</div>
+        <div class="stat-value">2,405</div>
+        <div class="stat-desc">Queries this week</div>
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 1.5rem;">
+    <!-- Recent Section -->
+    <div class="card">
+        <div class="flex justify-between items-center mb-4">
+            <h3 style="font-weight: 600;">Recent Additions</h3>
+            <a href="/contacts" style="color: var(--primary); font-size: 0.875rem; font-weight: 600;">View All</a>
+        </div>
+        
+        <div class="table-container" style="box-shadow: none; border: none; overflow: visible;">
+            <table class="table">
+                <tbody>
+                    <% if (recentContacts.length === 0) { %>
+                        <tr>
+                            <td class="empty-state" style="padding: 2rem;">
+                                <i class="fas fa-inbox empty-icon"></i>
+                                <div>No contacts found. Start by adding one.</div>
+                            </td>
+                        </tr>
+                    <% } else { %>
+                        <% recentContacts.forEach(contact => { %>
+                        <tr>
+                            <td>
+                                <div class="contact-info">
+                                    <div class="avatar"><%= contact.name.charAt(0) %></div>
+                                    <div class="contact-details">
+                                        <span class="contact-name"><%= contact.name %></span>
+                                        <span class="contact-email"><%= contact.email %></span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-right">
+                                <span class="badge badge-gray">
+                                    <%= new Date(contact.createdAt).toLocaleDateString() %>
+                                </span>
+                            </td>
+                        </tr>
+                        <% }) %>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Contact Activity Section -->
+    <div class="card">
+        <div class="flex justify-between items-center mb-4">
+            <h3 style="font-weight: 600;">Contact Activity</h3>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <% if (recentContacts.length > 0) { %>
+                <% recentContacts.slice(0, 4).forEach((contact, index) => { %>
+                <div style="display: flex; gap: 1rem; position: relative;">
+                    <div style="display: flex; flex-direction: column; align-items: center;">
+                        <div style="width: 12px; height: 12px; border-radius: 50%; background: var(--primary); margin-top: 6px;"></div>
+                        <% if (index < Math.min(recentContacts.length, 4) - 1) { %>
+                        <div style="width: 2px; height: 100%; background: var(--border-color); flex: 1;"></div>
+                        <% } %>
+                    </div>
+                    <div style="padding-bottom: 1rem;">
+                        <div style="font-weight: 500; font-size: 0.875rem;">New contact added</div>
+                        <div style="color: var(--text-muted); font-size: 0.75rem; margin-top: 0.25rem;">
+                            <%= contact.name %> was added to the database on <%= new Date(contact.createdAt).toLocaleDateString() %>
+                        </div>
+                    </div>
+                </div>
+                <% }) %>
+            <% } else { %>
+                <div class="empty-state" style="padding: 2rem;">
+                    <i class="fas fa-history empty-icon"></i>
+                    <div>No activity yet.</div>
+                </div>
+            <% } %>
+        </div>
+    </div>
+</div>

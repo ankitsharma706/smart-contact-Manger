@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Contact Manager</title>
+    <!-- Removed Tailwind CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-address-book"></i>
+                <span>SmartContact</span>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="/" class="sidebar-item <%= page === 'dashboard' ? 'active' : '' %>">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="/contacts" class="sidebar-item <%= page === 'contacts' ? 'active' : '' %>">
+                    <i class="fas fa-users"></i>
+                    <span>All Contacts</span>
+                </a>
+                <a href="/contacts/new" class="sidebar-item <%= page === 'new' ? 'active' : '' %>">
+                    <i class="fas fa-user-plus"></i>
+                    <span>Add New</span>
+                </a>
+                <a href="/contacts/export" class="sidebar-item">
+                    <i class="fas fa-download"></i>
+                    <span>Export CSV</span>
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="sidebar-footer-title">Storage</div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar"></div>
+                </div>
+                <div class="sidebar-footer-text">Using local CSV storage</div>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <!-- Top Nav -->
+            <header class="top-header">
+                <div class="header-mobile-brand">
+                     <i class="fas fa-address-book"></i>
+                     <span>SmartContact</span>
+                </div>
+                <div class="header-welcome">
+                     Welcome back, <span>Admin</span>
+                </div>
+                
+                <div class="header-actions">
+                    <form action="/contacts" method="GET" class="search-form" id="searchForm">
+                        <input type="text" name="q" placeholder="Search contacts..." class="search-input">
+                        <div id="searchIconContainer" class="search-icon">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <button type="submit" style="display: none;"></button>
+                    </form>
+                    <button class="btn-icon">
+                        <i class="fas fa-bell"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <div class="content-wrapper">
+                <%- body %>
+            </div>
+            
+            <footer class="app-footer">
+                &copy; 2026 Smart Contact Manager. Built with precision and care.
+            </footer>
+        </main>
+    </div>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script>
+        document.addEventListener('submit', function(e) {
+            const form = e.target;
+            const submitBtn = form.querySelector('button[type="submit"]');
+            
+            if (form.id === 'searchForm') {
+                const iconContainer = document.getElementById('searchIconContainer');
+                if (iconContainer) {
+                    iconContainer.innerHTML = '<span class="loading-spinner primary"></span>';
+                }
+                return;
+            }
+
+            if (submitBtn && !submitBtn.classList.contains('no-loading')) {
+                submitBtn.classList.add('btn-loading');
+                const hasIcon = submitBtn.querySelector('i');
+                const hasText = submitBtn.innerText.trim().length > 0;
+                
+                if (hasIcon) {
+                    hasIcon.className = 'loading-spinner' + (hasText ? ' mr-2' : '');
+                } else {
+                    submitBtn.insertAdjacentHTML('afterbegin', '<span class="loading-spinner ' + (hasText ? 'mr-2' : '') + '"></span>');
+                }
+            }
+        });
+
+        <% if (success_msg && success_msg.length > 0) { %>
+            Toastify({
+                text: "<%= success_msg %>",
+                duration: 4000,
+                close: true,
+                gravity: "top",
+                position: "right",
+                stopOnFocus: true,
+                style: {
+                    background: "linear-gradient(to right, #2563eb, #60a5fa)",
+                    borderRadius: "12px",
+                }
+            }).showToast();
+        <% } %>
+
+        <% if (error_msg && error_msg.length > 0) { %>
+            Toastify({
+                text: "<%= error_msg %>",
+                duration: 5000,
+                close: true,
+                gravity: "top",
+                position: "right",
+                stopOnFocus: true,
+                style: {
+                    background: "linear-gradient(to right, #dc2626, #f87171)",
+                    borderRadius: "12px"
+                }
+            }).showToast();
+        <% } %>
+    </script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<div class="form-card">
+    <div class="form-header">
+        <a href="/contacts" class="btn-icon">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <h1 class="page-title">Edit Profile</h1>
+    </div>
+
+    <% if (error) { %>
+        <div class="alert alert-error">
+            <i class="fas fa-exclamation-circle"></i>
+            <span><%= error %></span>
+        </div>
+    <% } %>
+
+    <div class="card" style="padding: 2rem;">
+        <form action="/contacts/update/<%= contact.email %>" method="POST" class="space-y-6">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" name="name" value="<%= contact.name %>" required class="form-input">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Phone Number</label>
+                    <input type="tel" name="phone" value="<%= contact.phone %>" required class="form-input">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Email Address (Read Only)</label>
+                <input type="email" name="email" value="<%= contact.email %>" readonly class="form-input" style="background-color: #f3f4f6; color: var(--text-muted); cursor: not-allowed;">
+            </div>
+            
+            <div style="padding: 1rem; background-color: #f9fafb; border-radius: var(--radius-lg); border: 1px solid var(--border-color); margin-bottom: 1.5rem;">
+                <p style="font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: var(--text-muted); letter-spacing: 0.05em; margin-bottom: 0.5rem;">Audit Trail</p>
+                <div class="flex items-center gap-2 text-sm" style="color: var(--text-secondary);">
+                    <i class="fas fa-calendar-alt text-muted"></i>
+                    Created on <%= new Date(contact.createdAt).toLocaleDateString() %> at <%= new Date(contact.createdAt).toLocaleTimeString() %>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary" style="flex: 2; padding: 1rem; font-size: 1rem;">
+                    Update Registry
+                </button>
+                <button type="button" onclick="history.back()" class="btn btn-secondary" style="flex: 1; padding: 1rem; font-size: 1rem;">
+                    Cancel
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

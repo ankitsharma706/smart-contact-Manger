@@ -1,0 +1,6 @@
+{
+  "name": "Smart Contact Manager",
+  "description": "A professional contact management system with CSV storage, ISO timestamping, and a light-themed dashboard.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}

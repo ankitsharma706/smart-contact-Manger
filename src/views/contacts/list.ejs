@@ -1,0 +1,123 @@
+<div class="page-title-section">
+    <div>
+        <h1 class="page-title">Contact Repository</h1>
+        <p class="page-subtitle">Manage and audit your full list of connections.</p>
+    </div>
+    <div class="flex gap-4 items-center">
+         <a href="/contacts/export" class="btn btn-secondary">
+            <i class="fas fa-file-export"></i> Export CSV
+        </a>
+        <a href="/contacts/new" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Add Contact
+        </a>
+    </div>
+</div>
+
+<div class="card mb-4" style="padding: 1rem 1.5rem;">
+    <form action="/contacts" method="GET" class="filter-bar">
+        <div class="filter-group">
+            <label class="form-label" style="font-size: 0.75rem; text-transform: uppercase;">Search Term</label>
+            <div style="position: relative;">
+                <input type="text" name="q" value="<%= query || '' %>" placeholder="Name, email, or phone..." class="form-input" style="padding-left: 2.5rem;">
+                <i class="fas fa-search" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+            </div>
+        </div>
+
+        <div class="filter-group" style="min-width: 150px;">
+            <label class="form-label" style="font-size: 0.75rem; text-transform: uppercase;">Start Date</label>
+            <input type="date" name="startDate" value="<%= startDate || '' %>" class="form-input" style="color: var(--text-secondary);">
+        </div>
+
+        <div class="filter-group" style="min-width: 150px;">
+            <label class="form-label" style="font-size: 0.75rem; text-transform: uppercase;">End Date</label>
+            <input type="date" name="endDate" value="<%= endDate || '' %>" class="form-input" style="color: var(--text-secondary);">
+        </div>
+
+        <div class="flex items-center gap-2" style="padding-bottom: 0.5rem; min-width: 120px; align-self: center; margin-top: 1rem;">
+            <input type="checkbox" name="exact" id="exactMatch" <%= exact ? 'checked' : '' %> style="width: 1rem; height: 1rem; accent-color: var(--primary);">
+            <label for="exactMatch" style="font-size: 0.875rem; font-weight: 500; color: var(--text-secondary); cursor: pointer;">Exact Match</label>
+        </div>
+
+        <div class="flex gap-2" style="align-self: flex-end;">
+            <button type="submit" class="btn btn-primary">Apply</button>
+            <a href="/contacts" class="btn btn-secondary" style="padding: 0.75rem;"><i class="fas fa-redo"></i></a>
+        </div>
+    </form>
+</div>
+
+<% if (query || startDate || endDate) { %>
+    <div class="alert alert-info">
+        <div class="flex items-center justify-between w-full">
+            <div>
+                <strong>Active Filters:</strong> 
+                <% if (query) { %> <span class="badge badge-blue ml-1">Search: "<%= query %>" <%= exact ? '(Exact)' : '' %></span> <% } %>
+                <% if (startDate) { %> <span class="badge badge-blue ml-1">From: <%= startDate %></span> <% } %>
+                <% if (endDate) { %> <span class="badge badge-blue ml-1">To: <%= endDate %></span> <% } %>
+            </div>
+            <a href="/contacts" style="font-size: 0.75rem; font-weight: 700; color: var(--primary);">Clear All</a>
+        </div>
+    </div>
+<% } %>
+
+<div class="table-container">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Internal ID</th>
+                <th>Contact</th>
+                <th>Phone Number</th>
+                <th>Creation Audit</th>
+                <th class="text-right">Operations</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if (contacts.length === 0) { %>
+                <tr>
+                    <td colspan="5" class="empty-state">
+                        <i class="fas fa-search empty-icon"></i>
+                        <div>No matching records found in the database.</div>
+                    </td>
+                </tr>
+            <% } else { %>
+                <% contacts.forEach((contact, idx) => { %>
+                <tr>
+                    <td style="font-family: monospace; font-size: 0.75rem; color: var(--text-muted);">
+                        #<%= idx + 1000 %>
+                    </td>
+                    <td>
+                        <div class="contact-info">
+                            <div class="avatar"><%= contact.name.charAt(0) %></div>
+                            <div class="contact-details">
+                                <span class="contact-name"><%= contact.name %></span>
+                                <span class="contact-email"><%= contact.email %></span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="flex items-center gap-2" style="font-weight: 500; font-size: 0.875rem;">
+                            <i class="fas fa-phone" style="color: var(--accent);"></i>
+                            <%= contact.phone %>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="font-weight: 500;"><%= new Date(contact.createdAt).toLocaleDateString() %></div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);"><%= new Date(contact.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) %></div>
+                    </td>
+                    <td class="text-right">
+                        <div class="action-btns">
+                            <a href="/contacts/edit/<%= contact.email %>" class="btn-action">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <form action="/contacts/delete/<%= contact.email %>" method="POST" onsubmit="return confirm('Permanently delete <%= contact.name %>? This action cannot be undone.')" style="display: inline;">
+                                <button type="submit" class="btn-action delete">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                <% }) %>
+            <% } %>
+        </tbody>
+    </table>
+</div>
